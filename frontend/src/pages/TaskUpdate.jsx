@@ -8,6 +8,7 @@ function TaskUpdate() {
   const [task, setTask] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("low");
 
   useEffect(() => {
     axios
@@ -16,6 +17,7 @@ function TaskUpdate() {
         setTask(response.data);
         setTitle(response.data.title || "");
         setDescription(response.data.description || "");
+        setPriority(response.data.priority || "low");
       })
       .catch((error) => {
         console.error("There was an error fetching the task!", error);
@@ -27,6 +29,7 @@ function TaskUpdate() {
     const updatedTask = {
       title: title,
       description: description,
+      priority: priority,
     };
     axios
       .put(`${import.meta.env.VITE_API}/tasks/${id}`, updatedTask)
@@ -72,6 +75,20 @@ function TaskUpdate() {
               placeholder="Enter task description..."
               className="form-textarea"
             ></textarea>
+          </div>
+          <div className="form-group">
+            <label htmlFor="priority">Priority:</label>
+            <select
+              id="priority"
+              name="priority"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="form-select"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-success">

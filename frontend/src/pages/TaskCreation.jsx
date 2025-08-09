@@ -10,6 +10,7 @@ function TaskCreation() {
     const newTask = {
       title: formData.get("title"),
       description: formData.get("description"),
+      priority: formData.get("priority"),
     };
     axios
       .post(`${import.meta.env.VITE_API}/tasks`, newTask)
@@ -51,6 +52,14 @@ function TaskCreation() {
               placeholder="Enter task description..."
               className="form-textarea"
             ></textarea>
+          </div>
+          <div className="form-group">
+            <label htmlFor="priority">Priority:</label>
+            <select id="priority" name="priority" className="form-select">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-success">

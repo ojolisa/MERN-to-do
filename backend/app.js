@@ -55,14 +55,15 @@ app.get('/tasks/:id', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
     try {
-        const { title, description } = req.body
+        const { title, description, priority } = req.body
         if (!title) {
             return res.status(400).json({ error: 'title required' })
         }
         const task = await Task.create({
             title,
             description: description || '',
-            completed: false
+            completed: false,
+            priority: priority || 'low'
         })
         res.status(201).json(task)
     } catch (err) {
@@ -73,13 +74,14 @@ app.post('/tasks', async (req, res) => {
 app.put('/tasks/:id', async (req, res) => {
     try {
         const id = req.params.id
-        const { title, description, completed } = req.body
+        const { title, description, completed, priority } = req.body
         if (!title) {
             return res.status(400).json({ error: 'title required' })
         }
         const updateData = {
             title,
-            description: description || ''
+            description: description || '',
+            priority: priority || 'low'
         }
 
         if (completed !== undefined) {
@@ -109,7 +111,7 @@ app.delete('/tasks/:id', async (req, res) => {
 app.get('/ai/summary', async (req, res) => {
     try {
         const tasks = await Task.find()
-        const prompt = "You are a helpful personal assistant. Address the user in second person. Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description + ' - ' + (task.completed ? 'completed' : 'pending')).join(", ")
+        const prompt = "You are a helpful personal assistant. Address the user in second person. Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description + ' - ' + (task.completed ? 'completed' : 'pending') + ' - ' + task.priority).join(", ")
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
