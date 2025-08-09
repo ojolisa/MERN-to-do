@@ -10,15 +10,13 @@ function App() {
   const [filteredTasks, setFilteredTasks] = useState([]);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const filteredTasks = tasks.filter((task) =>
+    const filteredTasks = tasks.filter(
+      (task) =>
         task.title.toLowerCase().includes(searchString.toLowerCase()) ||
-        (task.description && task.description.toLowerCase().includes(searchString.toLowerCase()))
-      );
-      setFilteredTasks(filteredTasks);
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
+        (task.description &&
+          task.description.toLowerCase().includes(searchString.toLowerCase()))
+    );
+    setFilteredTasks(filteredTasks);
   }, [searchString, tasks]);
 
   useEffect(() => {
@@ -47,7 +45,9 @@ function App() {
       .delete(`http://localhost:3000/tasks/${id}`)
       .then((response) => {
         console.log("Task deleted:", response.data);
-        getTasks();
+        setFilteredTasks((prevTasks) =>
+          prevTasks.filter((task) => task.id !== id)
+        );
       })
       .catch((error) => {
         console.error("There was an error deleting the task!", error);
@@ -64,7 +64,11 @@ function App() {
       .put(`http://localhost:3000/tasks/${id}`, newTask)
       .then((response) => {
         console.log("Task updated:", response.data);
-        getTasks();
+        setFilteredTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === id ? { ...task, completed: !task.completed } : task
+          )
+        );
       })
       .catch((error) => {
         console.error("There was an error updating the task!", error);
@@ -131,7 +135,9 @@ function App() {
                 <button
                   className="btn btn-toggle"
                   onClick={() => updateCompleted(task.id)}
-                  title={task.completed ? "Mark as Pending" : "Mark as Completed"}
+                  title={
+                    task.completed ? "Mark as Pending" : "Mark as Completed"
+                  }
                 >
                   {task.completed ? "✅ Completed" : "⏳ Pending"}
                 </button>
