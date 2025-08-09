@@ -19,7 +19,11 @@ function TaskUpdate() {
         setTitle(response.data.title || "");
         setDescription(response.data.description || "");
         setPriority(response.data.priority || "low");
-        setDueDate(response.data.dueDate || "");
+        setDueDate(
+          response.data.dueDate
+            ? new Date(response.data.dueDate).toISOString().split("T")[0]
+            : ""
+        );
       })
       .catch((error) => {
         console.error("There was an error fetching the task!", error);
