@@ -11,6 +11,7 @@ function TaskCreation() {
       title: formData.get("title"),
       description: formData.get("description"),
       priority: formData.get("priority"),
+      dueDate: formData.get("dueDate"),
     };
     axios
       .post(`${import.meta.env.VITE_API}/tasks`, newTask)
@@ -60,6 +61,15 @@ function TaskCreation() {
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="dueDate">Due Date:</label>
+            <input
+              type="date"
+              id="dueDate"
+              name="dueDate"
+              className="form-input"
+            />
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-success">

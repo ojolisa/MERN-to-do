@@ -9,6 +9,7 @@ function TaskUpdate() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("low");
+  const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
     axios
@@ -18,6 +19,7 @@ function TaskUpdate() {
         setTitle(response.data.title || "");
         setDescription(response.data.description || "");
         setPriority(response.data.priority || "low");
+        setDueDate(response.data.dueDate || "");
       })
       .catch((error) => {
         console.error("There was an error fetching the task!", error);
@@ -30,6 +32,7 @@ function TaskUpdate() {
       title: title,
       description: description,
       priority: priority,
+      dueDate: dueDate,
     };
     axios
       .put(`${import.meta.env.VITE_API}/tasks/${id}`, updatedTask)
@@ -89,6 +92,17 @@ function TaskUpdate() {
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="dueDate">Due Date:</label>
+            <input
+              type="date"
+              id="dueDate"
+              name="dueDate"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="form-input"
+            />
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-success">
