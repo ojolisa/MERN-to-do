@@ -39,6 +39,23 @@ function App() {
       });
   }
 
+  function updateCompleted(id) {
+    let task = tasks.find((task) => task.id === id);
+    const newTask = {
+      ...task,
+      completed: !task.completed,
+    };
+    axios
+      .put(`http://localhost:3000/tasks/${id}`, newTask)
+      .then((response) => {
+        console.log("Task updated:", response.data);
+        getTasks();
+      })
+      .catch((error) => {
+        console.error("There was an error updating the task!", error);
+      });
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -87,6 +104,13 @@ function App() {
                 </Link>
               </div>
               <div className="task-actions">
+                <button
+                  className="btn btn-toggle"
+                  onClick={() => updateCompleted(task.id)}
+                  title={task.completed ? "Mark as Pending" : "Mark as Completed"}
+                >
+                  {task.completed ? "✅ Completed" : "⏳ Pending"}
+                </button>
                 <button
                   className="btn btn-danger"
                   onClick={() => deleteTask(task.id)}

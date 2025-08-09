@@ -74,11 +74,16 @@ app.put('/tasks/:id', async (req, res) => {
         if (!title) {
             return res.status(400).json({ error: 'title required' })
         }
-        const task = await Task.findByIdAndUpdate(id, {
+        const updateData = {
             title,
-            description: description || '',
-            completed: completed ? completed : undefined
-        }, { new: true, runValidators: true })
+            description: description || ''
+        }
+
+        if (completed !== undefined) {
+            updateData.completed = completed
+        }
+
+        const task = await Task.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
         res.status(200).json(task)
     } catch (err) {
         res.status(500).json({ error: 'failed to update task', detail: err.message })
