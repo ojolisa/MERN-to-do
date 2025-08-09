@@ -82,6 +82,9 @@ function App() {
                 >
                   {task.completed ? "✅ Completed" : "⏳ Pending"}
                 </span>
+                <Link to={`/update-task/${task.id}`} className="btn btn-edit">
+                  ✏️ Edit
+                </Link>
               </div>
               <div className="task-actions">
                 <button
