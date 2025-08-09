@@ -6,12 +6,16 @@ function TaskUpdate() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [task, setTask] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     axios
       .get(`http://localhost:3000/tasks/${id}`)
       .then((response) => {
         setTask(response.data);
+        setTitle(response.data.title || "");
+        setDescription(response.data.description || "");
       })
       .catch((error) => {
         console.error("There was an error fetching the task!", error);
@@ -20,10 +24,9 @@ function TaskUpdate() {
 
   function updateTask(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
     const updatedTask = {
-      title: formData.get("title"),
-      description: formData.get("description"),
+      title: title,
+      description: description,
     };
     axios
       .put(`http://localhost:3000/tasks/${id}`, updatedTask)
@@ -52,7 +55,9 @@ function TaskUpdate() {
               id="title"
               name="title"
               required
-              placeholder={task ? task.title : "Enter task title..."}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter task title..."
               className="form-input"
             />
           </div>
@@ -62,9 +67,9 @@ function TaskUpdate() {
               id="description"
               name="description"
               required
-              placeholder={
-                task ? task.description : "Enter task description..."
-              }
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter task description..."
               className="form-textarea"
             ></textarea>
           </div>
