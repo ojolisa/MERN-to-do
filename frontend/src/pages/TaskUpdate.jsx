@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 function TaskUpdate() {
   const navigate = useNavigate();
@@ -11,7 +14,7 @@ function TaskUpdate() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/tasks/${id}`)
+      .get(`${process.env.API}/tasks/${id}`)
       .then((response) => {
         setTask(response.data);
         setTitle(response.data.title || "");
@@ -29,7 +32,7 @@ function TaskUpdate() {
       description: description,
     };
     axios
-      .put(`http://localhost:3000/tasks/${id}`, updatedTask)
+      .put(`${process.env.API}/tasks/${id}`, updatedTask)
       .then((response) => {
         console.log("Task updated:", response.data);
         navigate("/");
