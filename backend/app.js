@@ -109,7 +109,7 @@ app.delete('/tasks/:id', async (req, res) => {
 app.get('/ai/summary', async (req, res) => {
     try {
         const tasks = await Task.find()
-        const prompt = "Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description).join(", ")
+        const prompt = "You are a helpful personal assistant. Address the user in second person. Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description + ' - ' + (task.completed ? 'completed' : 'pending')).join(", ")
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
