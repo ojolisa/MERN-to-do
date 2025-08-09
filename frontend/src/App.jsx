@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 
@@ -49,6 +50,9 @@ function App() {
         <button className="btn btn-primary" onClick={getTasks}>
           🔄 Refresh Tasks
         </button>
+        <Link to="/create-task" className="btn btn-success">
+          ➕ Create New Task
+        </Link>
       </div>
 
       {loading ? (
