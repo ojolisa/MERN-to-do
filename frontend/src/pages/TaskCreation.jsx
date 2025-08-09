@@ -1,8 +1,5 @@
 import axios from "axios";
-import dotenv from "dotenv";
 import { useNavigate, Link } from "react-router-dom";
-
-dotenv.config();
 
 function TaskCreation() {
   const navigate = useNavigate();
@@ -15,7 +12,7 @@ function TaskCreation() {
       description: formData.get("description"),
     };
     axios
-      .post(`${process.env.API}/tasks`, newTask)
+      .post(`${import.meta.env.VITE_API}/tasks`, newTask)
       .then((response) => {
         console.log("Task created:", response.data);
         navigate("/");

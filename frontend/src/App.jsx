@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import dotenv from "dotenv";
 import axios from "axios";
 import "./App.css";
-
-dotenv.config();
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -29,7 +26,7 @@ function App() {
   function getTasks() {
     setLoading(true);
     axios
-      .get(`${process.env.API}/tasks`)
+      .get(`${import.meta.env.VITE_API}/tasks`)
       .then((response) => {
         console.log("Tasks:", response.data);
         setTasks(response.data);
@@ -45,7 +42,7 @@ function App() {
 
   function deleteTask(id) {
     axios
-      .delete(`${process.env.API}/tasks/${id}`)
+      .delete(`${import.meta.env.VITE_API}/tasks/${id}`)
       .then((response) => {
         console.log("Task deleted:", response.data);
         setFilteredTasks((prevTasks) =>
@@ -64,7 +61,7 @@ function App() {
       completed: !task.completed,
     };
     axios
-      .put(`${process.env.API}/tasks/${id}`, newTask)
+      .put(`${import.meta.env.VITE_API}/tasks/${id}`, newTask)
       .then((response) => {
         console.log("Task updated:", response.data);
         setFilteredTasks((prevTasks) =>
