@@ -36,6 +36,50 @@
   flex-wrap: wrap;
 }
 
+/* Task Search */
+.task-search {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.task-search input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.task-search input:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.2);
+  text-align: left;
+}
+
+.task-search input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-color-scheme: light) {
+  .task-search input {
+    background: white;
+    color: #213547;
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .task-search input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;

@@ -6,6 +6,20 @@ import "./App.css";
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchString, setSearchString] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState([]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const filteredTasks = tasks.filter((task) =>
+        task.title.toLowerCase().includes(searchString.toLowerCase()) ||
+        (task.description && task.description.toLowerCase().includes(searchString.toLowerCase()))
+      );
+      setFilteredTasks(filteredTasks);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchString, tasks]);
 
   useEffect(() => {
     getTasks();
@@ -18,6 +32,7 @@ function App() {
       .then((response) => {
         console.log("Tasks:", response.data);
         setTasks(response.data);
+        setFilteredTasks(response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the tasks!", error);
@@ -72,12 +87,21 @@ function App() {
         </Link>
       </div>
 
+      <div className="task-search">
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+        />
+      </div>
+
       {loading ? (
         <div className="loading">
           <div className="spinner"></div>
           <p>Loading tasks...</p>
         </div>
-      ) : tasks.length === 0 ? (
+      ) : filteredTasks.length === 0 ? (
         <div className="empty-state">
           <div className="empty-state-icon">📋</div>
           <p className="empty-state-text">No tasks found</p>
@@ -87,7 +111,7 @@ function App() {
         </div>
       ) : (
         <ul className="task-list">
-          {tasks.map((task) => (
+          {filteredTasks.map((task) => (
             <li key={task.id} className="task-item">
               <div className="task-content">
                 <h3 className="task-title">{task.title}</h3>
