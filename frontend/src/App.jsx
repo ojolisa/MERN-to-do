@@ -12,12 +12,14 @@ function App() {
   const [summary, setSummary] = useState("");
 
   useEffect(() => {
-    const filteredTasks = tasks.filter(
-      (task) =>
-        task.title.toLowerCase().includes(searchString.toLowerCase()) ||
-        (task.description &&
-          task.description.toLowerCase().includes(searchString.toLowerCase()))
-    );
+    const filteredTasks = tasks
+      .filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchString.toLowerCase()) ||
+          (task.description &&
+            task.description.toLowerCase().includes(searchString.toLowerCase()))
+      )
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
     setFilteredTasks(filteredTasks);
   }, [searchString, tasks]);
 
@@ -32,7 +34,11 @@ function App() {
       .then((response) => {
         console.log("Tasks:", response.data);
         setTasks(response.data);
-        setFilteredTasks(response.data);
+        setFilteredTasks(
+          response.data.sort(
+            (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
+          )
+        );
       })
       .catch((error) => {
         console.error("There was an error fetching the tasks!", error);
@@ -133,6 +139,16 @@ function App() {
               <div className="task-content">
                 <h3 className="task-title">{task.title}</h3>
                 <p className="task-description">{task.description}</p>
+                <div className="task-meta">
+                  <span className="task-due-date">
+                    {task.dueDate
+                      ? new Date(task.dueDate).toLocaleDateString()
+                      : "No due date"}
+                  </span>
+                  <span className={`task-priority ${task.priority || "low"}`}>
+                    {task.priority || "low"}
+                  </span>
+                </div>
                 <span
                   className={`task-status ${
                     task.completed ? "completed" : "pending"
