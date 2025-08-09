@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 import "./App.css";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [summary, setSummary] = useState("");
 
   useEffect(() => {
     const filteredTasks = tasks.filter(
@@ -72,6 +74,17 @@ function App() {
       })
       .catch((error) => {
         console.error("There was an error updating the task!", error);
+      });
+  }
+
+  function getSummary() {
+    axios
+      .get(`${import.meta.env.VITE_API}/ai/summary`)
+      .then((response) => {
+        setSummary(response.data.summary);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the AI summary!", error);
       });
   }
 
@@ -153,6 +166,17 @@ function App() {
           ))}
         </ul>
       )}
+      <div className="ai-summary">
+        <h2>AI Task Summary</h2>
+        <button className="btn btn-info" onClick={getSummary}>
+          🤖 Generate Summary
+        </button>
+        {summary && (
+          <div className="summary-content">
+            <ReactMarkdown>{summary}</ReactMarkdown>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

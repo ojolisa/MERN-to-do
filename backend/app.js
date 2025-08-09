@@ -3,12 +3,15 @@ const dotenv = require('dotenv')
 const Task = require('./models/task')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const { GoogleGenAI } = require('@google/genai')
 
 const app = express()
 
 dotenv.config()
 app.use(express.json())
 app.use(cors())
+
+const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })
 
 async function connect() {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -100,6 +103,27 @@ app.delete('/tasks/:id', async (req, res) => {
         res.status(200).json({ 'message': 'deleted' })
     } catch (err) {
         res.status(500).json({ error: 'failed to delete task', detail: err.message })
+    }
+})
+
+app.get('/ai/summary', async (req, res) => {
+    try {
+        const tasks = await Task.find()
+        const prompt = "Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description).join(", ")
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                thinkingConfig: {
+                    thinkingBudget: 0,
+                },
+            }
+        });
+        res.status(200).json({
+            summary: response.text
+        })
+    } catch (err) {
+        res.status(500).json({ error: 'failed to generate summary', detail: err.message })
     }
 })
 
