@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -20,8 +20,8 @@ function TaskUpdate() {
     }
     setUserId(userIdFromStorage);
 
-    axios
-      .get(`http://localhost:3000/tasks/${id}`)
+    api
+      .get(`/tasks/${id}`)
       .then((response) => {
         setTask(response.data);
         setTitle(response.data.title || "");
@@ -46,8 +46,8 @@ function TaskUpdate() {
       priority: priority,
       dueDate: dueDate,
     };
-    axios
-      .put(`http://localhost:3000/tasks/${id}`, updatedTask)
+    api
+      .put(`/tasks/${id}`, updatedTask)
       .then((response) => {
         console.log("Task updated:", response.data);
         navigate(`/tasks/${userId}`);

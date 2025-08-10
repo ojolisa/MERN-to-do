@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import Tasks from "./pages/Tasks.jsx";
+import TasksPage from "./pages/TasksPage.jsx";
 import App from "./App.jsx";
 import TaskCreation from "./pages/TaskCreation.jsx";
 import TaskUpdate from "./pages/TaskUpdate.jsx";
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/tasks/:userId" element={<Tasks />} />
         <Route path="/create-task" element={<TaskCreation />} />
         <Route path="/update-task/:id" element={<TaskUpdate />} />
+        <Route path="/tasksPage/:taskId" element={<TasksPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

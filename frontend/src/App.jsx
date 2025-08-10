@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 
@@ -30,8 +30,8 @@ function App() {
 
     try {
       if (isLogin) {
-        const response = await axios.post(
-          "http://localhost:3000/authenticate",
+        const response = await api.post(
+          "/authenticate",
           {
             email: formData.email,
             password: formData.password,
@@ -43,7 +43,7 @@ function App() {
           navigate(`/tasks/${response.data.userId}`);
         }
       } else {
-        const response = await axios.post("http://localhost:3000/users", {
+  const response = await api.post("/users", {
           name: formData.name,
           email: formData.email,
           password: formData.password,

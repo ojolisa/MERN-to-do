@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -30,8 +30,8 @@ function TaskCreation() {
       dueDate: formData.get("dueDate"),
       userId: userId,
     };
-    axios
-      .post(`http://localhost:3000/tasks`, newTask)
+    api
+      .post(`/tasks`, newTask)
       .then((response) => {
         console.log("Task created:", response.data);
         navigate(`/tasks/${userId}`);

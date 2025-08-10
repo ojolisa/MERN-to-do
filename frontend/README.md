@@ -1,12 +1,21 @@
-# React + Vite
+# Frontend (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This app uses Vite environment variables to configure the API base URL.
 
-Currently, two official plugins are available:
+## Env var
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Create `frontend/.env` with:
 
-## Expanding the ESLint configuration
+	```bash
+	VITE_API_BASE_URL=http://localhost:3000
+	```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- The React app references it via `import.meta.env.VITE_API_BASE_URL` in `src/api.js`.
+- All Axios calls use the centralized client in `src/api.js`.
+
+## Scripts
+
+- `npm run dev` — start Vite dev server
+- `npm run build` — build for production
+- `npm run preview` — preview the production build
+

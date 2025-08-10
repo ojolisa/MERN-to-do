@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 import ReactMarkdown from "react-markdown";
 import "../App.css";
 
@@ -40,8 +40,8 @@ function Tasks() {
 
   function getTasks() {
     setLoading(true);
-    axios
-      .get(`http://localhost:3000/${userId}/tasks`)
+    api
+      .get(`/${userId}/tasks`)
       .then((response) => {
         console.log("Tasks:", response.data);
         setTasks(response.data);
@@ -60,8 +60,8 @@ function Tasks() {
   }
 
   function deleteTask(id) {
-    axios
-      .delete(`http://localhost:3000/tasks/${id}`)
+    api
+      .delete(`/tasks/${id}`)
       .then((response) => {
         console.log("Task deleted:", response.data);
         setFilteredTasks((prevTasks) =>
@@ -83,8 +83,8 @@ function Tasks() {
       priority: task.priority,
       dueDate: task.dueDate,
     };
-    axios
-      .put(`http://localhost:3000/tasks/${id}`, newTask)
+    api
+      .put(`/tasks/${id}`, newTask)
       .then((response) => {
         console.log("Task updated:", response.data);
         setFilteredTasks((prevTasks) =>
@@ -104,8 +104,8 @@ function Tasks() {
   }
 
   function getSummary() {
-    axios
-      .get(`http://localhost:3000/${userId}/ai/summary`)
+    api
+      .get(`/${userId}/ai/summary`)
       .then((response) => {
         setSummary(response.data.summary);
       })
@@ -164,7 +164,10 @@ function Tasks() {
         <ul className="task-list">
           {filteredTasks.map((task) => (
             <li key={task.id} className="task-item">
-              <div className="task-content">
+              <div
+                className="task-content"
+                onClick={() => navigate(`/tasksPage/${task.id}`)}
+              >
                 <h3 className="task-title">{task.title}</h3>
                 <p className="task-description">{task.description}</p>
                 <div className="task-meta">
@@ -184,7 +187,11 @@ function Tasks() {
                 >
                   {task.completed ? "✅ Completed" : "⏳ Pending"}
                 </span>
-                <Link to={`/update-task/${task.id}`} className="btn btn-edit">
+                <Link
+                  to={`/update-task/${task.id}`}
+                  className="btn btn-edit"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   ✏️ Edit
                 </Link>
               </div>
