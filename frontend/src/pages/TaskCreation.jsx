@@ -1,8 +1,24 @@
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function TaskCreation() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const userIdFromParams = searchParams.get("userId");
+    const userIdFromStorage = localStorage.getItem("userId");
+
+    if (userIdFromParams && userIdFromParams === userIdFromStorage) {
+      setUserId(userIdFromParams);
+    } else if (userIdFromStorage) {
+      setUserId(userIdFromStorage);
+    } else {
+      navigate("/");
+    }
+  }, [searchParams, navigate]);
 
   function createTask(event) {
     event.preventDefault();
@@ -12,16 +28,21 @@ function TaskCreation() {
       description: formData.get("description"),
       priority: formData.get("priority"),
       dueDate: formData.get("dueDate"),
+      userId: userId,
     };
     axios
-      .post(`${import.meta.env.VITE_API}/tasks`, newTask)
+      .post(`http://localhost:3000/tasks`, newTask)
       .then((response) => {
         console.log("Task created:", response.data);
-        navigate("/");
+        navigate(`/tasks/${userId}`);
       })
       .catch((error) => {
         console.error("There was an error creating the task!", error);
       });
+  }
+
+  if (!userId) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -75,7 +96,7 @@ function TaskCreation() {
             <button type="submit" className="btn btn-success">
               ✅ Create Task
             </button>
-            <Link to="/" className="btn btn-secondary">
+            <Link to={`/tasks/${userId}`} className="btn btn-secondary">
               ⬅️ Back to Tasks
             </Link>
           </div>

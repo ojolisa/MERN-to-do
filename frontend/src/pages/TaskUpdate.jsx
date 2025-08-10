@@ -10,10 +10,18 @@ function TaskUpdate() {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("low");
   const [dueDate, setDueDate] = useState("");
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const userIdFromStorage = localStorage.getItem("userId");
+    if (!userIdFromStorage) {
+      navigate("/");
+      return;
+    }
+    setUserId(userIdFromStorage);
+
     axios
-      .get(`${import.meta.env.VITE_API}/tasks/${id}`)
+      .get(`http://localhost:3000/tasks/${id}`)
       .then((response) => {
         setTask(response.data);
         setTitle(response.data.title || "");
@@ -28,7 +36,7 @@ function TaskUpdate() {
       .catch((error) => {
         console.error("There was an error fetching the task!", error);
       });
-  }, [id]);
+  }, [id, navigate]);
 
   function updateTask(event) {
     event.preventDefault();
@@ -39,10 +47,10 @@ function TaskUpdate() {
       dueDate: dueDate,
     };
     axios
-      .put(`${import.meta.env.VITE_API}/tasks/${id}`, updatedTask)
+      .put(`http://localhost:3000/tasks/${id}`, updatedTask)
       .then((response) => {
         console.log("Task updated:", response.data);
-        navigate("/");
+        navigate(`/tasks/${userId}`);
       })
       .catch((error) => {
         console.error("There was an error updating the task!", error);
@@ -112,7 +120,7 @@ function TaskUpdate() {
             <button type="submit" className="btn btn-success">
               ✅ Update Task
             </button>
-            <Link to="/" className="btn btn-secondary">
+            <Link to={`/tasks/${userId}`} className="btn btn-secondary">
               ⬅️ Back to Tasks
             </Link>
           </div>

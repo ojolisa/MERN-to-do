@@ -62,6 +62,10 @@ app.post('/tasks', async (req, res) => {
         if (!title || !userId) {
             return res.status(400).json({ error: 'title and userId are required' })
         }
+        const user = await User.findById(userId)
+        if (!user) {
+            return res.status(404).json({ error: 'user not found' })
+        }
         const task = await Task.create({
             title,
             description: description || '',
