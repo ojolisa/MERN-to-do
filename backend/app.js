@@ -122,6 +122,9 @@ app.get('/:userId/ai/summary', async (req, res) => {
     try {
         const { userId } = req.params
         const tasks = await Task.find({ userId })
+        if (tasks.length === 0) {
+            return res.status(200).json({ summary: 'You have no tasks at the moment.' })
+        }
         const prompt = "You are a helpful personal assistant. Address the user in second person. Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description + ' - ' + (task.completed ? 'completed' : 'pending') + ' - ' + task.priority + ' - ' + (task.dueDate ? task.dueDate : 'no due date')).join(", ")
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
