@@ -49,9 +49,9 @@ function App() {
           password: formData.password,
         });
 
-        if (response.data._id) {
-          localStorage.setItem("userId", response.data._id);
-          navigate(`/tasks/${response.data._id}`);
+        if (response.data.id) {
+          localStorage.setItem("userId", response.data.id);
+          navigate(`/tasks/${response.data.id}`);
         }
       }
     } catch (err) {

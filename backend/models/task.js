@@ -38,10 +38,8 @@ const TaskSchema = new mongoose.Schema(
     }
 )
 
-// Useful compound index for listing upcoming incomplete tasks
 TaskSchema.index({ completed: 1, dueDate: 1 })
 
-// Clean JSON output
 TaskSchema.set('toJSON', {
     versionKey: false,
     transform: (_doc, ret) => {

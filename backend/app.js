@@ -182,7 +182,7 @@ app.post('/authenticate', async (req, res) => {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: 'invalid email or password' })
         }
-        res.status(200).json({ userId: user._id, message: 'authentication successful' })
+        res.status(200).json({ userId: user._id.toString(), message: 'authentication successful' })
     } catch (err) {
         res.status(500).json({ error: 'failed to authenticate user', detail: err.message })
     }

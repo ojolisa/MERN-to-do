@@ -65,9 +65,9 @@ function Tasks() {
       .then((response) => {
         console.log("Task deleted:", response.data);
         setFilteredTasks((prevTasks) =>
-          prevTasks.filter((task) => task._id !== id)
+          prevTasks.filter((task) => task.id !== id)
         );
-        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
       })
       .catch((error) => {
         console.error("There was an error deleting the task!", error);
@@ -75,7 +75,7 @@ function Tasks() {
   }
 
   function updateCompleted(id) {
-    let task = tasks.find((task) => task._id === id);
+    let task = tasks.find((task) => task.id === id);
     const newTask = {
       title: task.title,
       description: task.description,
@@ -89,12 +89,12 @@ function Tasks() {
         console.log("Task updated:", response.data);
         setFilteredTasks((prevTasks) =>
           prevTasks.map((task) =>
-            task._id === id ? { ...task, completed: !task.completed } : task
+            task.id === id ? { ...task, completed: !task.completed } : task
           )
         );
         setTasks((prevTasks) =>
           prevTasks.map((task) =>
-            task._id === id ? { ...task, completed: !task.completed } : task
+            task.id === id ? { ...task, completed: !task.completed } : task
           )
         );
       })
@@ -163,7 +163,7 @@ function Tasks() {
       ) : (
         <ul className="task-list">
           {filteredTasks.map((task) => (
-            <li key={task._id} className="task-item">
+            <li key={task.id} className="task-item">
               <div className="task-content">
                 <h3 className="task-title">{task.title}</h3>
                 <p className="task-description">{task.description}</p>
@@ -184,14 +184,14 @@ function Tasks() {
                 >
                   {task.completed ? "✅ Completed" : "⏳ Pending"}
                 </span>
-                <Link to={`/update-task/${task._id}`} className="btn btn-edit">
+                <Link to={`/update-task/${task.id}`} className="btn btn-edit">
                   ✏️ Edit
                 </Link>
               </div>
               <div className="task-actions">
                 <button
                   className="btn btn-toggle"
-                  onClick={() => updateCompleted(task._id)}
+                  onClick={() => updateCompleted(task.id)}
                   title={
                     task.completed ? "Mark as Pending" : "Mark as Completed"
                   }
@@ -200,7 +200,7 @@ function Tasks() {
                 </button>
                 <button
                   className="btn btn-danger"
-                  onClick={() => deleteTask(task._id)}
+                  onClick={() => deleteTask(task.id)}
                   title="Delete task"
                 >
                   🗑️ Delete
