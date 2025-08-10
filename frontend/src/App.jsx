@@ -74,80 +74,82 @@ function App() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1 className="auth-title">
-          {isLogin ? "Welcome Back" : "Create Account"}
-        </h1>
-        <p className="auth-subtitle">
-          {isLogin ? "Sign in to manage your tasks" : "Sign up to get started"}
-        </p>
+    <div className="app">
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1 className="auth-title">
+            📝 {isLogin ? "Welcome Back" : "Join To-Do Manager"}
+          </h1>
+          <p className="auth-subtitle">
+            {isLogin ? "Sign in to manage your tasks" : "Sign up to get started"}
+          </p>
 
-        {error && <div className="error-message">{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {!isLogin && (
+          <form onSubmit={handleSubmit} className="auth-form">
+            {!isLogin && (
+              <div className="form-group">
+                <label htmlFor="name">Full Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required={!isLogin}
+                  placeholder="Enter your full name"
+                />
+              </div>
+            )}
+
             <div className="form-group">
-              <label htmlFor="name">Full Name</label>
+              <label htmlFor="email">Email</label>
               <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
                 onChange={handleInputChange}
-                required={!isLogin}
-                placeholder="Enter your full name"
+                required
+                placeholder="Enter your email"
               />
             </div>
-          )}
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              placeholder="Enter your email"
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter your password"
+                minLength="6"
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              placeholder="Enter your password"
-              minLength="6"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className={`auth-button ${loading ? "loading" : ""}`}
-            disabled={loading}
-          >
-            {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
-          </button>
-        </form>
-
-        <div className="auth-toggle">
-          <p>
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
-              type="button"
-              className="toggle-button"
-              onClick={toggleMode}
+              type="submit"
+              className={`auth-button ${loading ? "loading" : ""}`}
+              disabled={loading}
             >
-              {isLogin ? "Sign Up" : "Sign In"}
+              {loading ? "Please wait..." : isLogin ? "🔑 Sign In" : "🚀 Sign Up"}
             </button>
-          </p>
+          </form>
+
+          <div className="auth-toggle">
+            <p>
+              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              <button
+                type="button"
+                className="toggle-button"
+                onClick={toggleMode}
+              >
+                {isLogin ? "Sign Up" : "Sign In"}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -14,9 +14,9 @@ function Tasks() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
+    const storedUserId = localStorage.getItem("userId");
     if (!storedUserId || storedUserId !== userId) {
-      navigate('/');
+      navigate("/");
     }
   }, [userId, navigate]);
 
@@ -67,9 +67,7 @@ function Tasks() {
         setFilteredTasks((prevTasks) =>
           prevTasks.filter((task) => task._id !== id)
         );
-        setTasks((prevTasks) =>
-          prevTasks.filter((task) => task._id !== id)
-        );
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
       })
       .catch((error) => {
         console.error("There was an error deleting the task!", error);
@@ -83,7 +81,7 @@ function Tasks() {
       description: task.description,
       completed: !task.completed,
       priority: task.priority,
-      dueDate: task.dueDate
+      dueDate: task.dueDate,
     };
     axios
       .put(`http://localhost:3000/tasks/${id}`, newTask)
@@ -117,8 +115,8 @@ function Tasks() {
   }
 
   function handleLogout() {
-    localStorage.removeItem('userId');
-    navigate('/');
+    localStorage.removeItem("userId");
+    navigate("/");
   }
 
   return (
