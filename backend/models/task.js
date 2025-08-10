@@ -26,6 +26,11 @@ const TaskSchema = new mongoose.Schema(
             enum: ['low', 'medium', 'high'],
             default: 'medium',
             index: true
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
         }
     },
     {

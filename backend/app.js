@@ -1,9 +1,11 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const Task = require('./models/task')
+const User = require('./models/users')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const { GoogleGenAI } = require('@google/genai')
+const bcrypt = require('bcrypt')
 
 const app = express()
 
@@ -30,9 +32,10 @@ app.get('/', (req, res) => {
     }
 })
 
-app.get('/tasks', async (req, res) => {
+app.get('/:userId/tasks', async (req, res) => {
     try {
-        const data = await Task.find()
+        const { userId } = req.params
+        const data = await Task.find({ userId })
         res.status(200).json(data)
     }
     catch {
@@ -55,16 +58,17 @@ app.get('/tasks/:id', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
     try {
-        const { title, description, priority, dueDate } = req.body
-        if (!title) {
-            return res.status(400).json({ error: 'title required' })
+        const { title, description, priority, dueDate, userId } = req.body
+        if (!title || !userId) {
+            return res.status(400).json({ error: 'title and userId are required' })
         }
         const task = await Task.create({
             title,
             description: description || '',
             completed: false,
             priority: priority || 'low',
-            dueDate: dueDate || null
+            dueDate: dueDate || null,
+            userId: userId
         })
         res.status(201).json(task)
     } catch (err) {
@@ -110,9 +114,10 @@ app.delete('/tasks/:id', async (req, res) => {
     }
 })
 
-app.get('/ai/summary', async (req, res) => {
+app.get('/:userId/ai/summary', async (req, res) => {
     try {
-        const tasks = await Task.find()
+        const { userId } = req.params
+        const tasks = await Task.find({ userId })
         const prompt = "You are a helpful personal assistant. Address the user in second person. Summarize the following tasks: " + tasks.map(task => task.title + " - " + task.description + ' - ' + (task.completed ? 'completed' : 'pending') + ' - ' + task.priority + ' - ' + (task.dueDate ? task.dueDate : 'no due date')).join(", ")
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -128,6 +133,67 @@ app.get('/ai/summary', async (req, res) => {
         })
     } catch (err) {
         res.status(500).json({ error: 'failed to generate summary', detail: err.message })
+    }
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        const { name, email, password } = req.body
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: 'name, email and password are required' })
+        }
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const user = await User.create({ name, email, password: hashedPassword })
+        res.status(201).json(user)
+    } catch (err) {
+        res.status(500).json({ error: 'failed to create user', detail: err.message })
+    }
+})
+
+app.put('/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const { name, email, password } = req.body
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: 'name, email and password are required' })
+        }
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const user = await User.findByIdAndUpdate(id, { name, email, password: hashedPassword }, { new: true, runValidators: true })
+        if (!user) {
+            return res.status(404).json({ error: 'user not found' })
+        }
+        res.status(200).json(user)
+    } catch (err) {
+        res.status(500).json({ error: 'failed to update user', detail: err.message })
+    }
+})
+
+app.post('/authenticate', async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!email || !password) {
+            return res.status(400).json({ error: 'email and password are required' })
+        }
+        const user = await User.findOne({ email })
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(401).json({ error: 'invalid email or password' })
+        }
+        res.status(200).json({ userId: user._id, message: 'authentication successful' })
+    } catch (err) {
+        res.status(500).json({ error: 'failed to authenticate user', detail: err.message })
+    }
+})
+
+app.delete('/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const user = await User.findByIdAndDelete(id)
+        if (!user) {
+            return res.status(404).json({ error: 'user not found' })
+        }
+        res.status(200).json({ message: 'user deleted' })
+    } catch (err) {
+        res.status(500).json({ error: 'failed to delete user', detail: err.message })
     }
 })
 
