@@ -1,12 +1,56 @@
 # To-Do Manager
 
-A simple full‑stack to‑do app with:
+Full‑stack to‑do app (MERN + AI) showcasing modern, minimal patterns.
 
-- Email/password sign up and sign in (no JWT; userId stored in localStorage)
-- Task CRUD: title, description, priority, due date, completed toggle
-- AI task summary powered by Google Generative AI
+## Current Features
 
-Technologies: Node.js + Express 5, MongoDB + Mongoose 8, React 19 + Vite, Axios, bcrypt.
+Frontend (React + Vite)
+
+- User authentication UI (sign up / sign in) with form validation & loading states
+- LocalStorage persistence of `userId` (lightweight session – no JWT yet)
+- Protected task views (redirect to auth when missing / mismatched userId)
+- Task list with:
+  - Create / Read / Update / Delete (CRUD)
+  - Quick completed toggle (inline update)
+  - Client-side search (title + description substring match)
+  - Automatic sorting by earliest due date
+  - Priority badges (low / medium / high)
+  - Due date display (fallback: “No due date”)
+  - Individual task detail page (`/tasksPage/:taskId`)
+- Task creation & update forms (prefilled on edit; date + priority selectors)
+- AI task summary panel with on-demand generation and Markdown rendering (via `react-markdown`)
+- Logout button clears session and redirects
+- Basic responsive-friendly layout & status states (loading, empty, error console logging)
+
+Backend (Node.js + Express + MongoDB)
+
+- REST API for users & tasks
+- User registration with bcrypt password hashing
+- Email/password authentication endpoint (`/authenticate`) returning `userId`
+- Task model with validation (title length, description length, enum priority, timestamps)
+- CRUD endpoints for tasks (scoped by `userId` for list + direct ID lookups)
+- AI summary endpoint (`/:userId/ai/summary`) using Google Generative AI (Gemini 2.5 Flash)
+- Consistent JSON shape: replace `_id` with `id`, omit `password`
+- Indexed fields (completed, priority, compound completed+dueDate) for potential scaling
+- Centralized error handling per route with descriptive error messages
+
+Developer Experience
+
+- Clear environment variable usage for backend & frontend
+- Postman collection for rapid API exploration
+- Modular Mongoose models (`Task`, `User`)
+- Centralized Axios instance for API base URL management
+
+Planned / Potential Next Steps (not yet implemented)
+
+- JWT-based auth & refresh tokens
+- Pagination & server-side filtering/sorting
+- Rate limiting & request validation middleware (e.g. zod / celebrate)
+- Unit/integration tests (Jest / Supertest) & component tests (Vitest / React Testing Library)
+- Dark mode & accessibility improvements
+- Bulk operations (multi-complete / multi-delete)
+
+Technologies: Node.js + Express 5, MongoDB + Mongoose 8, React 19 + Vite, Axios, bcrypt, Google Generative AI (Gemini), react-markdown.
 
 ## Project structure
 
